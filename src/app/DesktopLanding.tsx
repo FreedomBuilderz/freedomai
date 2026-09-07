@@ -1,5 +1,5 @@
 export const WINDOWS_DOWNLOAD_URL =
-  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.0-x64.exe";
+  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.1-x64.exe";
 export const MAC_DOWNLOAD_URL = "https://github.com/FreedomBuilderz/freedomai/releases/latest";
 
 export type BrowserPlatform = "windows" | "mac" | "other";

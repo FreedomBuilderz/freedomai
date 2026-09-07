@@ -13,7 +13,7 @@ npm run desktop:package -- --win
 
 Publish the generated `FreedomBuild-Local-AI-<version>-x64.exe` from `release/` on the product download page. The assisted installer installs per user, allows the destination to be changed, creates a desktop shortcut, and adds a Start Menu shortcut.
 
-Pushing a semantic version tag such as `v0.1.0` runs `.github/workflows/release-windows.yml`. The workflow tests and packages the application, creates the corresponding GitHub Release, and uploads the Windows installer used by the website download button.
+Pushing a semantic version tag such as `v0.1.1` runs `.github/workflows/release-windows.yml`. The workflow tests and packages the application, creates the corresponding GitHub Release, and uploads the Windows installer used by the website download button.
 
 Production releases must be Authenticode-signed before public distribution. Unsigned development installers can trigger Microsoft Defender SmartScreen warnings.
 
@@ -57,4 +57,4 @@ The deployed web build is an operating-system-aware download page, not a browser
 
 The first visit still requires the user to download and approve the native installer. Browsers cannot silently install an application or create a desktop shortcut. The Windows installer creates that shortcut; the macOS package must be built and published separately on macOS.
 
-Publish the Windows installer as a GitHub Release asset named `FreedomBuild-Local-AI-0.1.0-x64.exe` so the website's stable latest-release URL resolves.
+Publish the Windows installer with the versioned artifact name generated from `package.json` so the website's stable latest-release URL resolves.
