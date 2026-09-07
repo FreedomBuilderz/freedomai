@@ -12,6 +12,8 @@ describe("DesktopLanding", () => {
     render(<DesktopLanding platform="windows" />);
 
     expect(screen.getByRole("heading", { name: "Your AI. Your computer." })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Main navigation" }).querySelector(".landing-nav-inner"))
+      .toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Download for Windows" })[0]).toHaveAttribute(
       "href",
       WINDOWS_DOWNLOAD_URL

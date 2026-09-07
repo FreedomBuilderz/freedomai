@@ -50,8 +50,10 @@ export function DesktopLanding({ platform = detectBrowserPlatform() }: { platfor
   return (
     <main className="desktop-landing">
       <nav className="landing-nav" aria-label="Main navigation">
-        <a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a>
-        <div className="landing-nav-links"><a href="#tutorial">How it works</a><a href="#capabilities">Capabilities</a><a href="#faq">FAQ</a></div>
+        <div className="landing-nav-inner">
+          <a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a>
+          <div className="landing-nav-links"><a href="#tutorial">How it works</a><a href="#capabilities">Capabilities</a><a href="#faq">FAQ</a></div>
+        </div>
       </nav>
 
       <section className="landing-hero" id="top">
