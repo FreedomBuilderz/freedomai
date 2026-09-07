@@ -51,7 +51,7 @@ The `http://127.0.0.1:5173` address is used only by `npm run desktop:dev`. It is
 
 ## Website launch flow
 
-The deployed web build is a download and launch page, not a browser copy of the AI interface. Its **Open FreedomBuild** button uses the registered `freedombuild://open` link. If the desktop application is installed, the operating system opens or focuses it.
+The deployed web build is an operating-system-aware download page, not a browser copy of the AI interface. Windows visitors see **Download for Windows** and macOS visitors see **Download for Mac**. Users launch the application from the desktop shortcut, Start Menu, Applications, Spotlight, or Dock after installation.
 
 The first visit still requires the user to download and approve the native installer. Browsers cannot silently install an application or create a desktop shortcut. The Windows installer creates that shortcut; the macOS package must be built and published separately on macOS.
 
