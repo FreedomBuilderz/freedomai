@@ -53,6 +53,10 @@ jobs:
         shell: bash
         run: |
           version="v$(node -p "require('./package.json').version")"
-          gh release edit "$version" --draft=false
+          if gh release view "$version" >/dev/null 2>&1; then
+            gh release edit "$version" --draft=false
+          else
+            echo "Release $version does not exist yet; the version tag will create it."
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
