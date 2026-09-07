@@ -13,7 +13,7 @@ npm run desktop:package -- --win
 
 Publish the generated `FreedomBuild-Local-AI-<version>-x64.exe` from `release/` on the product download page. The assisted installer installs per user, allows the destination to be changed, creates a desktop shortcut, and adds a Start Menu shortcut.
 
-Pushing a semantic version tag such as `v0.1.1` runs `.github/workflows/release-windows.yml`. The workflow tests and packages the application, creates the corresponding GitHub Release, and uploads the Windows installer used by the website download button.
+Pushing a semantic version tag such as `v0.1.2` runs `.github/workflows/release-windows.yml`. The workflow creates one draft release, tests and packages Windows x64 plus both native Mac architectures, and publishes only after every required build succeeds.
 
 Production releases must be Authenticode-signed before public distribution. Unsigned development installers can trigger Microsoft Defender SmartScreen warnings.
 
@@ -27,6 +27,8 @@ npm run desktop:package -- --mac
 ```
 
 Publish the generated DMG from `release/`. Users open the DMG, drag FreedomBuild Local AI into Applications, and launch it from Applications, Spotlight, or the Dock.
+
+GitHub builds `arm64` on `macos-15` for Apple Silicon and `x64` on `macos-15-intel`. Each release includes architecture-specific DMG and ZIP files. Until Apple signing secrets are configured, users may need to Control-click the app, choose **Open**, and confirm the unsigned developer build.
 
 Production releases must be signed with a Developer ID Application certificate and notarized with Apple. macOS packaging and notarization must run on macOS; it cannot be completed from this Windows build machine.
 

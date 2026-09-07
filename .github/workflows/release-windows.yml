@@ -1,62 +1,95 @@
-name: Release Windows installer
+name: Release desktop installers
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "v*.*.*"
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create draft release
+        shell: bash
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME already exists."
+          else
+            gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --draft --title "FreedomBuild Local AI $GITHUB_REF_NAME" --generate-notes
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   release-windows:
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: create-release
     runs-on: windows-latest
     steps:
       - name: Check out source
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Test
         run: npm test -- --run
-
-      - name: Build and publish Windows installer
-        run: npm run desktop:package -- --win --publish always
+      - name: Build Windows installer
+        run: npm run desktop:package -- --win --publish never
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-
-      - name: Publish release
-        run: gh release edit "$env:GITHUB_REF_NAME" --draft=false
+      - name: Upload Windows installer
+        shell: pwsh
+        run: |
+          $version = node -p "require('./package.json').version"
+          gh release upload "$env:GITHUB_REF_NAME" "release/FreedomBuild-Local-AI-$version-x64.exe" "release/latest.yml" --clobber
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-existing-draft:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+  release-macos:
+    needs: create-release
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x64
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Check out source
         uses: actions/checkout@v4
-
-      - name: Publish the current version release if it is a draft
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Test
+        run: npm test -- --run
+      - name: Build macOS installers
+        run: npm run desktop:package -- --mac --${{ matrix.arch }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Upload macOS installers
         shell: bash
         run: |
-          version="v$(node -p "require('./package.json').version")"
-          if gh release view "$version" >/dev/null 2>&1; then
-            gh release edit "$version" --draft=false
-          else
-            echo "Release $version does not exist yet; the version tag will create it."
-          fi
+          version="$(node -p "require('./package.json').version")"
+          gh release upload "$GITHUB_REF_NAME" "release/FreedomBuild-Local-AI-$version-${{ matrix.arch }}.dmg" "release/FreedomBuild-Local-AI-$version-${{ matrix.arch }}.zip" --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-release:
+    needs: [release-windows, release-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish completed release
+        run: gh release edit "$GITHUB_REF_NAME" --draft=false --repo "$GITHUB_REPOSITORY"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
