@@ -100,8 +100,8 @@ export function DesktopLanding({ platform = detectBrowserPlatform() }: { platfor
         </div>
       </section>
 
-      <section className="landing-cta">
-        <span className="section-label">READY WHEN YOU ARE</span><h2>Bring AI home.</h2><p>Download FreedomBuild, install your recommended model, and keep your work where it belongs.</p><DownloadButton platform={platform} /><small>The installer asks for your approval and creates the application shortcut.</small>
+      <section className="landing-cta landing-full-bleed" data-testid="landing-cta">
+        <div className="landing-cta-inner"><span className="section-label">READY WHEN YOU ARE</span><h2>Bring AI home.</h2><p>Download FreedomBuild, install your recommended model, and keep your work where it belongs.</p><DownloadButton platform={platform} /><small>The installer asks for your approval and creates the application shortcut.</small></div>
       </section>
       <footer className="landing-footer landing-full-bleed"><div className="landing-footer-inner"><a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a><p>Local intelligence. Your rules.</p><span>© 2026 FreedomBuild</span></div></footer>
     </main>

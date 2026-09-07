@@ -196,7 +196,8 @@ html { scroll-behavior: smooth; }
 .faq-list details { padding: 23px 4px; border-bottom: 1px solid #cbddec; }
 .faq-list summary { color: #173d65; font-size: 17px; font-weight: 800; cursor: pointer; }
 .faq-list p { max-width: 700px; color: #647e9c; line-height: 1.65; }
-.landing-cta { display: flex; flex-direction: column; align-items: center; padding: 100px 24px; background: #0a315c; text-align: center; }
+.landing-cta { padding: 0 24px; background: #0a315c; text-align: center; }
+.landing-cta-inner { width: 100%; max-width: 1200px; min-height: 510px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; }
 .landing-cta .section-label { color: #72bff7; }
 .landing-cta h2 { color: white; }
 .landing-cta p { max-width: 650px; margin: 0 0 30px; color: #b5cee5; font-size: 18px; line-height: 1.6; }

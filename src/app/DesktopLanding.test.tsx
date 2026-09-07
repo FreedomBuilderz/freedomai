@@ -18,6 +18,9 @@ describe("DesktopLanding", () => {
     const footer = screen.getByRole("contentinfo");
     expect(footer).toHaveClass("landing-full-bleed");
     expect(footer.querySelector(".landing-footer-inner")).toBeInTheDocument();
+    const callToAction = screen.getByTestId("landing-cta");
+    expect(callToAction).toHaveClass("landing-full-bleed");
+    expect(callToAction.querySelector(".landing-cta-inner")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Download for Windows" })[0]).toHaveAttribute(
       "href",
       WINDOWS_DOWNLOAD_URL
