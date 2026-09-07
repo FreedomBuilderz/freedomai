@@ -1,6 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { DesktopLanding, MAC_DOWNLOAD_URL, WINDOWS_DOWNLOAD_URL } from "./DesktopLanding";
+import {
+  DesktopLanding,
+  MAC_ARM64_DOWNLOAD_URL,
+  MAC_X64_DOWNLOAD_URL,
+  WINDOWS_DOWNLOAD_URL
+} from "./DesktopLanding";
 
 describe("DesktopLanding", () => {
   it("offers only the Windows installer on Windows", () => {
@@ -21,10 +26,17 @@ describe("DesktopLanding", () => {
     expect(screen.getAllByRole("link", { name: "Download for Windows" })).toHaveLength(2);
   });
 
-  it("offers only the Mac download on macOS", () => {
+  it("offers Apple Silicon and Intel downloads only on macOS", () => {
     render(<DesktopLanding platform="mac" />);
-    expect(screen.getAllByRole("link", { name: "Download for Mac" })).toHaveLength(2);
-    expect(screen.getAllByRole("link", { name: "Download for Mac" })[0]).toHaveAttribute("href", MAC_DOWNLOAD_URL);
+    expect(screen.getAllByRole("link", { name: "Download for Apple Silicon" })[0]).toHaveAttribute(
+      "href",
+      MAC_ARM64_DOWNLOAD_URL
+    );
+    expect(screen.getAllByRole("link", { name: "Download for Intel Mac" })[0]).toHaveAttribute(
+      "href",
+      MAC_X64_DOWNLOAD_URL
+    );
+    expect(screen.getByText(/Apple menu.*About This Mac/i)).toBeInTheDocument();
     expect(screen.queryByText("Download for Windows")).not.toBeInTheDocument();
   });
 });

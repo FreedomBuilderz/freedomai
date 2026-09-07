@@ -1,6 +1,10 @@
 export const WINDOWS_DOWNLOAD_URL =
-  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.1-x64.exe";
-export const MAC_DOWNLOAD_URL = "https://github.com/FreedomBuilderz/freedomai/releases/latest";
+  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.2-x64.exe";
+export const MAC_ARM64_DOWNLOAD_URL =
+  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.2-arm64.dmg";
+export const MAC_X64_DOWNLOAD_URL =
+  "https://github.com/FreedomBuilderz/freedomai/releases/latest/download/FreedomBuild-Local-AI-0.1.2-x64.dmg";
+const RELEASES_URL = "https://github.com/FreedomBuilderz/freedomai/releases/latest";
 
 export type BrowserPlatform = "windows" | "mac" | "other";
 
@@ -10,10 +14,20 @@ export function detectBrowserPlatform(userAgent = navigator.userAgent): BrowserP
   return "other";
 }
 
-function DownloadButton({ platform }: { platform: BrowserPlatform }) {
+function DownloadButton({ platform, showMacHelp = false }: { platform: BrowserPlatform; showMacHelp?: boolean }) {
   if (platform === "windows") return <a className="landing-download" href={WINDOWS_DOWNLOAD_URL}>Download for Windows</a>;
-  if (platform === "mac") return <a className="landing-download" href={MAC_DOWNLOAD_URL}>Download for Mac</a>;
-  return <a className="landing-download" href={MAC_DOWNLOAD_URL}>View available downloads</a>;
+  if (platform === "mac") {
+    return (
+      <div className="mac-download-block">
+        <div className="mac-download-options">
+          <a className="landing-download" href={MAC_ARM64_DOWNLOAD_URL}>Download for Apple Silicon</a>
+          <a className="landing-download landing-download-secondary" href={MAC_X64_DOWNLOAD_URL}>Download for Intel Mac</a>
+        </div>
+        {showMacHelp && <small>Not sure? Open Apple menu → About This Mac and check the processor or chip.</small>}
+      </div>
+    );
+  }
+  return <a className="landing-download" href={RELEASES_URL}>View available downloads</a>;
 }
 
 const tutorialSteps = [
@@ -45,7 +59,7 @@ export function DesktopLanding({ platform = detectBrowserPlatform() }: { platfor
           <span className="setup-kicker">LOCAL AI · PRIVATE BY DEFAULT</span>
           <h1>Your AI.<br /><em>Your computer.</em></h1>
           <p>FreedomBuild installs an AI matched to your hardware. Chat, write, learn, and build locally—with no per-message token cost.</p>
-          <div className="hero-actions"><DownloadButton platform={platform} /><a className="tutorial-link" href="#tutorial">See how it works ↓</a></div>
+          <div className="hero-actions"><DownloadButton platform={platform} showMacHelp /><a className="tutorial-link" href="#tutorial">See how it works ↓</a></div>
           <div className="trust-row"><span>✓ Runs locally</span><span>✓ Works offline</span><span>✓ Local memory</span></div>
         </div>
         <div className="product-preview" aria-label="FreedomBuild desktop app preview">
