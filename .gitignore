@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build and packaging output
+dist/
+dist-electron/
+release/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# Local AI model data
+*.gguf
+*.gguf.*
+models/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.idea/
+.vscode/

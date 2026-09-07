@@ -1,0 +1,85 @@
+{
+  "name": "freedombuild-local-ai",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "electron:compile": "tsc -p tsconfig.electron.json && esbuild electron/preload.ts --bundle --platform=node --format=cjs --external:electron --outfile=dist-electron/preload.cjs",
+    "desktop:dev": "concurrently -k \"vite --host 127.0.0.1 --strictPort\" \"wait-on http://127.0.0.1:5173 && npm run electron:compile && tsx scripts/launch-electron.ts\"",
+    "desktop:build": "npm run build && npm run electron:compile",
+    "desktop:package": "npm run desktop:build && electron-builder",
+    "test": "vitest",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "latest",
+    "jsdom": "^26.1.0",
+    "node-llama-cpp": "^3.20.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.13",
+    "wait-on": "^9.1.0"
+  },
+  "build": {
+    "appId": "ai.freedombuild.desktop",
+    "productName": "FreedomBuild Local AI",
+    "artifactName": "FreedomBuild-Local-AI-${version}-${arch}.${ext}",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/node-llama-cpp/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "dmg": {
+      "title": "FreedomBuild Local AI",
+      "contents": [
+        { "x": 140, "y": 220, "type": "file" },
+        { "x": 420, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "FreedomBuild Local AI",
+      "uninstallDisplayName": "FreedomBuild Local AI"
+    }
+  }
+}
