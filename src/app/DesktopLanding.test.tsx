@@ -12,8 +12,12 @@ describe("DesktopLanding", () => {
     render(<DesktopLanding platform="windows" />);
 
     expect(screen.getByRole("heading", { name: "Your AI. Your computer." })).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: "Main navigation" }).querySelector(".landing-nav-inner"))
-      .toBeInTheDocument();
+    const navigation = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(navigation).toHaveClass("landing-full-bleed");
+    expect(navigation.querySelector(".landing-nav-inner")).toBeInTheDocument();
+    const footer = screen.getByRole("contentinfo");
+    expect(footer).toHaveClass("landing-full-bleed");
+    expect(footer.querySelector(".landing-footer-inner")).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: "Download for Windows" })[0]).toHaveAttribute(
       "href",
       WINDOWS_DOWNLOAD_URL

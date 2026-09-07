@@ -49,7 +49,7 @@ export function DesktopLanding({ platform = detectBrowserPlatform() }: { platfor
   const platformName = platform === "windows" ? "Windows" : platform === "mac" ? "macOS" : "your computer";
   return (
     <main className="desktop-landing">
-      <nav className="landing-nav" aria-label="Main navigation">
+      <nav className="landing-nav landing-full-bleed" aria-label="Main navigation">
         <div className="landing-nav-inner">
           <a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a>
           <div className="landing-nav-links"><a href="#tutorial">How it works</a><a href="#capabilities">Capabilities</a><a href="#faq">FAQ</a></div>
@@ -103,7 +103,7 @@ export function DesktopLanding({ platform = detectBrowserPlatform() }: { platfor
       <section className="landing-cta">
         <span className="section-label">READY WHEN YOU ARE</span><h2>Bring AI home.</h2><p>Download FreedomBuild, install your recommended model, and keep your work where it belongs.</p><DownloadButton platform={platform} /><small>The installer asks for your approval and creates the application shortcut.</small>
       </section>
-      <footer><a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a><p>Local intelligence. Your rules.</p><span>© 2026 FreedomBuild</span></footer>
+      <footer className="landing-footer landing-full-bleed"><div className="landing-footer-inner"><a className="landing-brand" href="#top"><span className="brand-mark">F</span> FreedomBuild</a><p>Local intelligence. Your rules.</p><span>© 2026 FreedomBuild</span></div></footer>
     </main>
   );
 }

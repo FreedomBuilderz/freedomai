@@ -6,7 +6,7 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; }
+body, #root { margin: 0; width: 100%; min-width: 320px; min-height: 100vh; }
 button, textarea { font: inherit; }
 button { cursor: pointer; }
 
@@ -134,6 +134,7 @@ button:focus-visible, textarea:focus-visible { outline: 3px solid #55aaff; outli
 
 html { scroll-behavior: smooth; }
 .desktop-landing { display: block; padding: 0; background: #f7fbff; overflow: hidden; }
+.landing-full-bleed { width: 100vw; max-width: none; margin-right: calc(50% - 50vw); margin-left: calc(50% - 50vw); }
 .landing-nav { height: 76px; display: flex; align-items: center; padding: 0 24px; background: rgba(255,255,255,.9); border-bottom: 1px solid #d9e9f8; position: relative; z-index: 2; }
 .landing-nav-inner { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: clamp(40px, 8vw, 120px); }
 .landing-brand { flex: 0 0 auto; display: flex; align-items: center; gap: 12px; color: #08264d; font-size: 18px; font-weight: 800; text-decoration: none; white-space: nowrap; }
@@ -200,7 +201,8 @@ html { scroll-behavior: smooth; }
 .landing-cta h2 { color: white; }
 .landing-cta p { max-width: 650px; margin: 0 0 30px; color: #b5cee5; font-size: 18px; line-height: 1.6; }
 .landing-cta small { margin-top: 18px; color: #799bb9; }
-.desktop-landing footer { display: flex; align-items: center; justify-content: space-between; padding: 35px max(24px, calc((100vw - 1200px) / 2)); background: #061f3d; color: #7899b8; font-size: 13px; }
+.desktop-landing footer { padding: 0 24px; background: #061f3d; color: #7899b8; font-size: 13px; }
+.landing-footer-inner { width: 100%; max-width: 1200px; min-height: 100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
 .desktop-landing footer .landing-brand { color: white; }
 
 @media (max-width: 900px) {
@@ -225,5 +227,5 @@ html { scroll-behavior: smooth; }
   .landing-section { padding: 78px 20px; }
   .tutorial-step { min-height: auto; }
   .tutorial-step h3 { margin-top: 25px; }
-  .desktop-landing footer { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .landing-footer-inner { min-height: 150px; align-items: flex-start; justify-content: center; flex-direction: column; gap: 12px; }
 }
