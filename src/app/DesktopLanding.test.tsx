@@ -6,19 +6,25 @@ describe("DesktopLanding", () => {
   it("offers only the Windows installer on Windows", () => {
     render(<DesktopLanding platform="windows" />);
 
-    expect(screen.getByRole("heading", { name: "Your private AI lives on your computer" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Download for Windows" })).toHaveAttribute(
+    expect(screen.getByRole("heading", { name: "Your AI. Your computer." })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Download for Windows" })[0]).toHaveAttribute(
       "href",
       WINDOWS_DOWNLOAD_URL
     );
     expect(screen.queryByText("Open FreedomBuild")).not.toBeInTheDocument();
     expect(screen.queryByText("Download for Mac")).not.toBeInTheDocument();
-    expect(screen.getByText(/installer creates the desktop icon/i)).toBeInTheDocument();
+    expect(screen.getByText(/creates your desktop shortcut/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "From download to private AI in five steps" })).toBeInTheDocument();
+    expect(screen.getByText("Assess your device")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Useful every day. Private by default." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Questions before you download" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Download for Windows" })).toHaveLength(2);
   });
 
   it("offers only the Mac download on macOS", () => {
     render(<DesktopLanding platform="mac" />);
-    expect(screen.getByRole("link", { name: "Download for Mac" })).toHaveAttribute("href", MAC_DOWNLOAD_URL);
+    expect(screen.getAllByRole("link", { name: "Download for Mac" })).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: "Download for Mac" })[0]).toHaveAttribute("href", MAC_DOWNLOAD_URL);
     expect(screen.queryByText("Download for Windows")).not.toBeInTheDocument();
   });
 });

@@ -11,7 +11,7 @@ describe("App", () => {
   });
   it("shows the desktop download page when opened in a browser", () => {
     render(<App store={new LocalConversationStore(localStorage)} />);
-    expect(screen.getByText("Your private AI lives on your computer")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Your AI. Your computer." })).toBeInTheDocument();
     expect(screen.queryByText(/recommended for this/i)).not.toBeInTheDocument();
   });
   it("sends a prompt, streams a local response, and persists the conversation", async () => {
