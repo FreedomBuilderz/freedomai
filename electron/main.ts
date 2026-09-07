@@ -6,10 +6,30 @@ import { assessDevice } from "./device.js";
 import { LocalAiService, NodeLlamaRuntimeAdapter } from "./local-ai-service.js";
 import { sendProgressIfAvailable } from "./progress-events.js";
 import { MemoryService } from "./memory-service.js";
+import { findFreedomBuildUrl } from "./deep-link.js";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const developmentOrigin = "http://127.0.0.1:5173";
 const activePrompts = new Map<string, AbortController>();
+let mainWindow: BrowserWindow | undefined;
+
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+if (!hasSingleInstanceLock) app.quit();
+
+function focusMainWindow(): void {
+  if (!mainWindow || mainWindow.isDestroyed()) mainWindow = createMainWindow();
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
+}
+
+function registerAppProtocol(): void {
+  if (process.defaultApp && process.argv[1]) {
+    app.setAsDefaultProtocolClient("freedombuild", process.execPath, [path.resolve(process.argv[1])]);
+  } else {
+    app.setAsDefaultProtocolClient("freedombuild");
+  }
+}
 
 function createMainWindow(): BrowserWindow {
   const preloadPath = resolvePreloadPath(currentDirectory);
@@ -31,10 +51,25 @@ function createMainWindow(): BrowserWindow {
     void window.loadURL(developmentOrigin);
   }
 
+  mainWindow = window;
+  window.on("closed", () => {
+    if (mainWindow === window) mainWindow = undefined;
+  });
   return window;
 }
 
+app.on("second-instance", (_event, commandLine) => {
+  if (findFreedomBuildUrl(commandLine)) focusMainWindow();
+  else focusMainWindow();
+});
+
+app.on("open-url", (event, url) => {
+  event.preventDefault();
+  if (findFreedomBuildUrl([url])) focusMainWindow();
+});
+
 app.whenReady().then(() => {
+  registerAppProtocol();
   const localAi = new LocalAiService(
     new NodeLlamaRuntimeAdapter(),
     path.join(app.getPath("userData"), "models")
@@ -63,9 +98,9 @@ app.whenReady().then(() => {
   ipcMain.on("model:cancel", (_event, requestId: string) => {
     activePrompts.get(requestId)?.abort();
   });
-  createMainWindow();
+  focusMainWindow();
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
+    if (BrowserWindow.getAllWindows().length === 0) focusMainWindow();
   });
 });
 

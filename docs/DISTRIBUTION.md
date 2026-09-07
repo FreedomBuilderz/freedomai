@@ -48,3 +48,11 @@ The application creates a `memory` directory inside Electron's per-user applicat
 `SOUL.md` is included as user-provided context in later local prompts. This is retrieval-based memory, not model-weight training. Secret-like statements are excluded from durable memory, and these files are never included in the application installer or source repository.
 
 The `http://127.0.0.1:5173` address is used only by `npm run desktop:dev`. It is not used in packaged applications.
+
+## Website launch flow
+
+The deployed web build is a download and launch page, not a browser copy of the AI interface. Its **Open FreedomBuild** button uses the registered `freedombuild://open` link. If the desktop application is installed, the operating system opens or focuses it.
+
+The first visit still requires the user to download and approve the native installer. Browsers cannot silently install an application or create a desktop shortcut. The Windows installer creates that shortcut; the macOS package must be built and published separately on macOS.
+
+Publish the Windows installer as a GitHub Release asset named `FreedomBuild-Local-AI-0.1.0-x64.exe` so the website's stable latest-release URL resolves.

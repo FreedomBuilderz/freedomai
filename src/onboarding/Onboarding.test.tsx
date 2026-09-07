@@ -21,7 +21,7 @@ describe("Onboarding", () => {
     const assessDevice = vi.fn().mockResolvedValue(device);
     const user = userEvent.setup();
 
-    render(<Onboarding assessDevice={assessDevice} onUseDemo={vi.fn()} />);
+    render(<Onboarding assessDevice={assessDevice} onInstall={vi.fn()} onUseDemo={vi.fn()} />);
     await user.click(screen.getByRole("button", { name: "Assess this device" }));
 
     expect(await screen.findByText("Recommended for this PC")).toBeInTheDocument();
@@ -40,6 +40,27 @@ describe("Onboarding", () => {
     await user.click(screen.getByRole("button", { name: /Qwen 2.5 3B Instruct/ }));
     expect(screen.getByRole("heading", { name: "Qwen 2.5 3B Instruct" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Install selected model" })).toBeEnabled();
+  });
+
+  it("does not pretend browser preview can detect or install desktop models", async () => {
+    const browserDevice: DeviceProfile = {
+      platform: "unknown",
+      architecture: "browser",
+      cpuModel: "Browser estimate",
+      cpuCores: 4,
+      totalMemoryBytes: 8 * 1024 ** 3,
+      freeMemoryBytes: 5 * 1024 ** 3,
+      freeDiskBytes: 10 * 1024 ** 3,
+      supportedBackends: ["cpu"]
+    };
+    const user = userEvent.setup();
+
+    render(<Onboarding assessDevice={() => Promise.resolve(browserDevice)} onUseDemo={vi.fn()} />);
+    expect(screen.getByText("Browser preview — installed models cannot be detected here")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Assess this device" }));
+
+    expect(await screen.findByText("Recommended for this device")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open the desktop app to install" })).toBeDisabled();
   });
 
   it("shows model download progress after installation starts", async () => {

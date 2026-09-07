@@ -6,6 +6,7 @@ import { ElectronLocalBackend } from "../chat/electron-local-backend";
 import { LocalConversationStore } from "../chat/conversation-store";
 import { ChatWorkspace } from "../chat/ChatWorkspace";
 import { Onboarding, type InstallationProgress } from "../onboarding/Onboarding";
+import { DesktopLanding } from "./DesktopLanding";
 import type { DeviceProfile, Recommendation } from "../onboarding/types";
 import "../styles/app.css";
 
@@ -36,6 +37,8 @@ export function App({
   store = new LocalConversationStore(localStorage),
   skipOnboarding = false
 }: AppProps) {
+  if (!window.freedomBuildDesktop && !skipOnboarding) return <DesktopLanding />;
+
   const [demoAccepted, setDemoAccepted] = useState(skipOnboarding);
   const [activeBackend, setActiveBackend] = useState<ChatBackend>(backend);
   const [checkingInstallation, setCheckingInstallation] = useState(

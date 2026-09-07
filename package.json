@@ -53,6 +53,12 @@
     "directories": {
       "output": "release"
     },
+    "protocols": [
+      {
+        "name": "FreedomBuild Local AI",
+        "schemes": ["freedombuild"]
+      }
+    ],
     "mac": {
       "category": "public.app-category.productivity",
       "target": [

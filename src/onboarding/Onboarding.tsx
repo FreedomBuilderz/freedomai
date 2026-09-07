@@ -75,6 +75,11 @@ export function Onboarding({ assessDevice, onUseDemo, onInstall }: OnboardingPro
     <main className="onboarding">
       <section className="setup-card">
         <div className="setup-brand"><span className="brand-mark">F</span> FreedomBuild</div>
+        {!onInstall && (
+          <div className="browser-preview-notice">
+            Browser preview — installed models cannot be detected here
+          </div>
+        )}
         {state === "welcome" && (
           <>
             <span className="setup-kicker">LOCAL AI SETUP</span>
@@ -93,7 +98,9 @@ export function Onboarding({ assessDevice, onUseDemo, onInstall }: OnboardingPro
         )}
         {state === "recommendation" && result && "model" in result && device && (
           <>
-            <span className="setup-kicker">Recommended for this {device.platform === "windows" ? "PC" : "Mac"}</span>
+            <span className="setup-kicker">
+              Recommended for this {device.platform === "windows" ? "PC" : device.platform === "macos" ? "Mac" : "device"}
+            </span>
             <h1>{result.model.name}</h1>
             <p>{result.reason}</p>
             {result.model.capabilitySummary && <p className="capability-summary">{result.model.capabilitySummary}</p>}
@@ -141,10 +148,12 @@ export function Onboarding({ assessDevice, onUseDemo, onInstall }: OnboardingPro
                 </div>
               </section>
             )}
-            <button className="primary-action" onClick={install}>
-              {result.model.id === recommendedModelId
-                ? "Install recommended model"
-                : "Install selected model"}
+            <button className="primary-action" disabled={!onInstall} onClick={install}>
+              {!onInstall
+                ? "Open the desktop app to install"
+                : result.model.id === recommendedModelId
+                  ? "Install recommended model"
+                  : "Install selected model"}
             </button>
             <button className="text-action" onClick={onUseDemo}>Use demo without installing</button>
           </>
