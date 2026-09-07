@@ -37,4 +37,14 @@ Production releases must be signed with a Developer ID Application certificate a
 5. The selected model downloads into the user's application-data directory.
 6. Later launches reuse the installed model and work offline.
 
+## Local Memory
+
+The application creates a `memory` directory inside Electron's per-user application-data directory:
+
+- `SOUL.md` stores explicit durable facts and preferences, such as “remember that…” and “my name is…”.
+- `ACTIVITY.md` stores a timestamped, append-only local record of completed interactions.
+- Full conversation state remains in the application's local conversation store.
+
+`SOUL.md` is included as user-provided context in later local prompts. This is retrieval-based memory, not model-weight training. Secret-like statements are excluded from durable memory, and these files are never included in the application installer or source repository.
+
 The `http://127.0.0.1:5173` address is used only by `npm run desktop:dev`. It is not used in packaged applications.

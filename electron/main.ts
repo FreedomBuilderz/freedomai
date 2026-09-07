@@ -5,6 +5,7 @@ import { createWindowOptions, isAllowedNavigation, resolvePreloadPath } from "./
 import { assessDevice } from "./device.js";
 import { LocalAiService, NodeLlamaRuntimeAdapter } from "./local-ai-service.js";
 import { sendProgressIfAvailable } from "./progress-events.js";
+import { MemoryService } from "./memory-service.js";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const developmentOrigin = "http://127.0.0.1:5173";
@@ -38,6 +39,8 @@ app.whenReady().then(() => {
     new NodeLlamaRuntimeAdapter(),
     path.join(app.getPath("userData"), "models")
   );
+  const memory = new MemoryService(path.join(app.getPath("userData"), "memory"));
+  void memory.initialize();
   ipcMain.handle("device:assess", () => assessDevice());
   ipcMain.handle("model:get-installed", () => localAi.getInstalled());
   ipcMain.handle("model:load-installed", () => localAi.loadInstalled());
@@ -48,7 +51,11 @@ app.whenReady().then(() => {
     const controller = new AbortController();
     activePrompts.set(requestId, controller);
     try {
-      return await localAi.prompt(prompt, () => undefined, controller.signal);
+      await memory.captureUserMemory(prompt);
+      const promptWithMemory = await memory.buildContext(prompt);
+      const response = await localAi.prompt(promptWithMemory, () => undefined, controller.signal);
+      await memory.recordInteraction(prompt, response);
+      return response;
     } finally {
       activePrompts.delete(requestId);
     }
